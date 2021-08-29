@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+
+  web:
+    build: 
+      context: ./php
+    volumes:
+      - ./testProject:/var/www/app
+    ports:
+      - 9000:9000
+  
+  nginx:
+    build:
+      context: ./nginx
+    links:
+      - web
+    volumes:
+      - ./testProject:/var/www/app
+    ports:
+      - 4888:80
+    depends_on:
+      - web
+
+  node-service:
+    image: node:latest
+    container_name: node-container
+    volumes:
+      - ./testProject:/var/www/app
+    working_dir: /var/www/app
