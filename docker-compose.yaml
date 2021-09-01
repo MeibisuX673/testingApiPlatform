@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
 
@@ -7,24 +7,21 @@ services:
       context: ./php
     volumes:
       - ./testProject:/var/www/app
-    ports:
-      - 9000:9000
   
   nginx:
-    build:
-      context: ./nginx
-    links:
-      - web
+    image: nginx:latest
     volumes:
       - ./testProject:/var/www/app
+      - ./nginx/config:/etc/nginx/conf.d
+    working_dir: /var/www/app
     ports:
       - 4888:80
     depends_on:
       - web
 
-  node-service:
-    image: node:latest
-    container_name: node-container
+  composer:
+    image: composer:2.0.11
     volumes:
       - ./testProject:/var/www/app
     working_dir: /var/www/app
+    command: composer install
